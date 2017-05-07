@@ -1,0 +1,13 @@
+#!/bin/sh
+
+branch_name="$(git symbolic-ref HEAD 2>/dev/null)" ||
+branch_name="(unnamed branch)"     # detached HEAD
+
+branch_name=${branch_name##refs/heads/}
+echo "On branch"
+echo $branch_name
+if [[ $branch_name = 'development' ]]; then
+	echo "In a development branch, removing objects"
+	rm ./Objects/*
+	touch ./Objects/.gitignore
+fi
