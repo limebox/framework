@@ -1,8 +1,8 @@
 <deploy>
     <files>
-        <path>~/FileCabinet/*</path>
+        <path>~/FileCabinet/SuiteScripts/sdf_ignore</path>
     </files>
     <objects>
-        <path>~/Objects/*</path>
+        <path>~/Objects/Temp/*</path>
     </objects>
 </deploy>

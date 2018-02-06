@@ -37,7 +37,7 @@ do
 
 		if [[ ${item} != *".attr.xml" && ${item} != *".gitignore" ]];then
 
-			allowedFiles="js|html|jpg|gif|png|css|json"
+			allowedFiles="js|html|jpg|jpeg|gif|png|css|json"
 			filename=$(basename "$item")
 			extension="${filename##*.}"
 			filename="${filename%.*}"
@@ -46,7 +46,7 @@ do
 
 				if [[ ${allowedFiles} != *${extension}* ]];then
 
-					echo "$item must have an extension (js|html|jpg|gif|png|css|json)"
+					echo "$item must have an extension (js|html|jpg|jpeg|gif|png|css|json)"
 					pass=false
 
 				else

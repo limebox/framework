@@ -1,0 +1,5 @@
+This file is a dummy file so that SDF has something to upload if you have no other script files to upload.
+
+This is because you cannot leave the <files> section blank if you are only updating objects.
+
+This file allows you to have a file that doesn't change the system in any way.

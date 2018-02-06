@@ -1,0 +1,12 @@
+<deploy>
+    <files>
+        <path>~/FileCabinet/SuiteScripts/sdf_ignore</path>
+        <path>~/FileCabinet/SuiteScripts/Models/Init.js</path>
+        <path>~/FileCabinet/SuiteScripts/Models/Preload.js</path>
+        <path>~/FileCabinet/SuiteScripts/Models/Read/Customer.js</path>
+        <path>~/FileCabinet/SuiteScripts/Restlet/GetCustomer.js</path>
+    </files>
+    <objects>
+        <path>~/Objects/Temp/*</path>
+    </objects>
+</deploy>
