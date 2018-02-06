@@ -1,0 +1,7 @@
+.metadata
+.settings
+.project
+Objects/Temp
+.sdf
+*.log
+.DS_Store

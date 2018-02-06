@@ -1,0 +1,89 @@
+#!/bin/sh
+echo "Building deploy.xml"
+
+filesToDeploy=()
+deletedFiles=()
+testvar=''
+pass=true
+cr=$'\n' # Mixed shell alternative to new line. Does not work in DASH shells. Use in sed via "\\${cr}"
+
+files=$(git diff --cached --name-status 2>&1)
+
+while read -r line; do
+	status=${line:0:1}
+	filename=${line:2}
+
+	case $status in
+		A|M)
+			filesToDeploy+=("$filename")
+			;;
+		R)
+			oldFile=$(echo $filename | cut -d' ' -f 2)
+			newFile=$(echo $filename | cut -d' ' -f 3)
+			deletedFiles+=("$oldFile")
+			filesToDeploy+=("$newFile")
+			;;
+		D)
+			deletedFiles+=("$filename")
+			;;
+	esac
+done <<< "$files"
+
+for item in "${filesToDeploy[@]}"
+do
+
+	if ! grep -Fq "$item" ./deploy.xml;then
+		# code if not found
+
+		if [[ ${item} != *".attr.xml" && ${item} != *".gitignore" ]];then
+
+			allowedFiles="js|html|jpg|gif|png|css|json"
+			filename=$(basename "$item")
+			extension="${filename##*.}"
+			filename="${filename%.*}"
+
+			if [[ ${item} = *"FileCabinet"* ]];then
+
+				if [[ ${allowedFiles} != *${extension}* ]];then
+
+					echo "$item must have an extension (js|html|jpg|gif|png|css|json)"
+					pass=false
+
+				else
+					content="\ \ \ \ \ \ \ \ <path>~/$item</path>"
+					C=$(echo $content | sed 's/\//\\\//g')
+					sed -i '' "/<\/files>/ s/.*/${C}\\${cr}&/" ./deploy.xml
+				fi
+
+			elif [[ ${item} = *"Objects"* ]];then
+
+				if [[ "xml" != *"$extension"* ]];then
+
+					echo "$filename is not a valid object. I don't know what to do with it."
+					pass=false
+
+				else
+
+					content="\ \ \ \ \ \ \ \ <path>~/$item</path>"
+					C=$(echo $content | sed 's/\//\\\//g')
+					sed -i '' "/<\/objects>/ s/.*/${C}\\${cr}&/" ./deploy.xml
+
+				fi
+
+			fi
+
+		fi
+
+	fi
+done
+
+for item in "${deletedFiles[@]}"
+do
+	sed -i '' "\|$item|d" ./deploy.xml
+done
+
+if [[ ${pass} = true ]];then
+	exit 0
+else
+	exit 1
+fi

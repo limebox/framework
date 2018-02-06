@@ -6,8 +6,22 @@ branch_name="(unnamed branch)"     # detached HEAD
 branch_name=${branch_name##refs/heads/}
 echo "On branch"
 echo $branch_name
-if [[ $branch_name = 'development' ]]; then
-	echo "In a development branch, removing objects"
-	rm ./Objects/*
-	touch ./Objects/.gitignore
-fi
+
+case $branch_name in
+	development)
+		echo "In a development branch, resetting deploy and release notes"
+
+		#reset deploy.xml
+		content="<deploy>\n    <files>\n        <path>~/FileCabinet/SuiteScripts/sdf_ignore</path>\n    </files>\n    <objects>\n        <path>~/Objects/Temp/*</path>\n    </objects>\n</deploy>"
+		echo -e "$content" > ./deploy.xml
+
+		rm ./Release\ Notes/*
+		touch ./Release\ Notes/.gitignore
+		;;
+	master)
+		echo "In master branch, resetting deploy"
+		#reset deploy.xml
+		content="<deploy>\n    <files>\n        <path>~/FileCabinet/SuiteScripts/sdf_ignore</path>\n    </files>\n    <objects>\n        <path>~/Objects/Temp/*</path>\n    </objects>\n</deploy>"
+		echo -e "$content" > ./deploy.xml
+		;;
+esac
