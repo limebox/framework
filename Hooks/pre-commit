@@ -6,6 +6,7 @@ deletedFiles=()
 testvar=''
 pass=true
 cr=$'\n' # Mixed shell alternative to new line. Does not work in DASH shells. Use in sed via "\\${cr}"
+os=${OSTYPE//[0-9.]/} # Because Mac uses a different version of sed, I need to get that
 
 files=$(git diff --cached --name-status 2>&1)
 
@@ -52,7 +53,11 @@ do
 				else
 					content="\ \ \ \ \ \ \ \ <path>~/$item</path>"
 					C=$(echo $content | sed 's/\//\\\//g')
-					sed -i '' "/<\/files>/ s/.*/${C}\\${cr}&/" ./deploy.xml
+					if [[ "$OSTYPE" == "darwin" ]]; then
+						sed -i '' "/<\/files>/ s/.*/${C}\\${cr}&/" ./deploy.xml
+					else
+						sed -i "/<\/files>/ s/.*/${C}\\${cr}&/" ./deploy.xml
+					fi
 				fi
 
 			elif [[ ${item} = *"Objects"* ]];then
@@ -66,7 +71,12 @@ do
 
 					content="\ \ \ \ \ \ \ \ <path>~/$item</path>"
 					C=$(echo $content | sed 's/\//\\\//g')
-					sed -i '' "/<\/objects>/ s/.*/${C}\\${cr}&/" ./deploy.xml
+
+					if [[ "$OSTYPE" == "darwin" ]]; then
+						sed -i '' "/<\/objects>/ s/.*/${C}\\${cr}&/" ./deploy.xml
+					else
+						sed -i "/<\/objects>/ s/.*/${C}\\${cr}&/" ./deploy.xml
+					fi
 
 				fi
 
@@ -79,7 +89,11 @@ done
 
 for item in "${deletedFiles[@]}"
 do
-	sed -i '' "\|$item|d" ./deploy.xml
+	if [[ "$OSTYPE" == "darwin" ]]; then
+		sed -i '' "\|$item|d" ./deploy.xml
+	else
+		sed -i "\|$item|d" ./deploy.xml
+	fi
 done
 
 if [[ ${pass} = true ]];then
