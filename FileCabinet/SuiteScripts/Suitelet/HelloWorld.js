@@ -9,7 +9,7 @@ function(  ) {
 
 	function onRequest(context) {
 
-		context.response.write("Hello World");
+		context.response.write("Hello World!");
 
 	};
 
