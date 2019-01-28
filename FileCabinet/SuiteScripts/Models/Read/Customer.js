@@ -32,7 +32,7 @@ function() {
 
 			findCustomers.each( function( result ) {
 				customers.push( JSON.parse( JSON.stringify( result ) ) );
-				return return;
+				return true;
 			});
 
 		} else {
